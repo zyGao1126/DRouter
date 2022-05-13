@@ -1,0 +1,209 @@
+VERSION 5.7 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN sample ;
+UNITS DISTANCE MICRONS 2000 ;
+
+COMPONENTS 33 ;
+- inst1 CELL1 + PLACED ( 14720 77080 ) FS
+ ;
+- inst2 CELL2 + PLACED ( 48760 47560 ) FS
+ ;
+- inst3 CELL2 + PLACED ( 69000 54940 ) N
+ ;
+- inst4 CELL2 + PLACED ( 68080 40180 ) FN
+ ;
+- inst5 CELL2 + PLACED ( 68080 32800 ) FS
+ ;
+- inst6 CELL2 + PLACED ( 68080 25420 ) FN
+ ;
+- inst7 CELL2 + PLACED ( 67160 18040 ) FS
+ ;
+- inst8 CELL2 + PLACED ( 66240 10660 ) FN
+ ;
+- inst9 CELL2 + PLACED ( 46920 10660 ) FN
+ ;
+- inst10 CELL2 + PLACED ( 26680 10660 ) FN
+ ;
+- inst11 CELL2 + PLACED ( 7360 10660 ) N
+ ;
+- inst12 CELL2 + PLACED ( 20240 3280 ) FS
+ ;
+- inst13 CELL2 + PLACED ( 45080 3280 ) S
+ ;
+- inst14 CELL2 + PLACED ( 34040 18040 ) S
+ ;
+- inst15 CELL2 + PLACED ( 4600 18040 ) S
+ ;
+- inst16 CELL2 + PLACED ( 4600 25420 ) N
+ ;
+- inst17 CELL2 + PLACED ( 5520 40180 ) FN
+ ;
+- inst18 CELL2 + PLACED ( 5520 47560 ) FS
+ ;
+- inst19 CELL2 + PLACED ( 4600 54940 ) FN
+ ;
+- inst20 CELL2 + PLACED ( 3680 62320 ) S
+ ;
+- inst21 CELL2 + PLACED ( 4600 69700 ) N
+ ;
+- inst22 CELL2 + PLACED ( 69000 77080 ) S
+ ;
+- inst23 CELL2 + PLACED ( 47840 69700 ) FN
+ ;
+- inst24 CELL2 + PLACED ( 27600 69700 ) FN
+ ;
+- inst25 CELL2 + PLACED ( 27600 54940 ) FN
+ ;
+- inst26 CELL2 + PLACED ( 25760 47560 ) FS
+ ;
+- inst27 CELL2 + PLACED ( 28520 40180 ) FN
+ ;
+- inst28 CELL2 + PLACED ( 25760 32800 ) FS
+ ;
+- inst29 CELL2 + PLACED ( 45080 32800 ) FS
+ ;
+- inst30 CELL2 + PLACED ( 47840 40180 ) FN
+ ;
+- inst31 CELL2 + PLACED ( 48760 62320 ) FS
+ ;
+- inst32 CELL2 + PLACED ( 69000 62320 ) S
+ ;
+- inst33 CELL2 + PLACED ( 29440 62320 ) S
+ ;
+END COMPONENTS
+
+PINS 5 ;
+- CK + NET net1 + DIRECTION INPUT + USE SIGNAL
+ ;
+- EN + NET net2 + DIRECTION INPUT + USE SIGNAL
+ ;
+- SEN + NET net3 + DIRECTION INPUT + USE SIGNAL
+ ;
+- DIN + NET net4 + DIRECTION INPUT + USE SIGNAL
+ ;
+- DOUT + NET net5 + DIRECTION OUTPUT + USE SIGNAL
+ ;
+END PINS
+
+NETS 37 ;
+- net1
+  ( PIN CK ) ( inst1 CK )
+ ;
+- net2
+  ( PIN EN ) ( inst1 E )
+ ;
+- net3
+  ( PIN SEN ) ( inst1 SE )
+ ;
+- net4
+  ( PIN DIN ) ( inst2 D )
+ ;
+- net5
+  ( PIN DOUT ) ( inst33 Q )
+ ;
+- net6
+  ( inst33 CK ) ( inst32 CK ) ( inst31 CK ) ( inst30 CK ) ( inst29 CK )
+  ( inst28 CK ) ( inst27 CK ) ( inst26 CK ) ( inst25 CK ) ( inst24 CK )
+  ( inst23 CK ) ( inst22 CK ) ( inst21 CK ) ( inst20 CK ) ( inst19 CK )
+  ( inst18 CK ) ( inst17 CK ) ( inst16 CK ) ( inst15 CK ) ( inst14 CK )
+  ( inst13 CK ) ( inst12 CK ) ( inst11 CK ) ( inst10 CK ) ( inst9 CK )
+  ( inst8 CK ) ( inst7 CK ) ( inst6 CK ) ( inst5 CK ) ( inst4 CK )
+  ( inst3 CK ) ( inst2 CK ) ( inst1 ECK )
+ ;
+- net7
+  ( inst3 D ) ( inst2 Q )
+ ;
+- net8
+  ( inst4 D ) ( inst3 Q )
+ ;
+- net9
+  ( inst5 D ) ( inst4 Q )
+ ;
+- net10
+  ( inst6 D ) ( inst5 Q )
+ ;
+- net11
+  ( inst7 D ) ( inst6 Q )
+ ;
+- net12
+  ( inst8 D ) ( inst7 Q )
+ ;
+- net13
+  ( inst9 D ) ( inst8 Q )
+ ;
+- net14
+  ( inst10 D ) ( inst9 Q )
+ ;
+- net15
+  ( inst11 D ) ( inst10 Q )
+ ;
+- net16
+  ( inst12 D ) ( inst11 Q )
+ ;
+- net17
+  ( inst13 D ) ( inst12 Q )
+ ;
+- net18
+  ( inst14 D ) ( inst13 Q )
+ ;
+- net19
+  ( inst15 D ) ( inst14 Q )
+ ;
+- net20
+  ( inst16 D ) ( inst15 Q )
+ ;
+- net21
+  ( inst17 D ) ( inst16 Q )
+ ;
+- net22
+  ( inst18 D ) ( inst17 Q )
+ ;
+- net23
+  ( inst19 D ) ( inst18 Q )
+ ;
+- net24
+  ( inst20 D ) ( inst19 Q )
+ ;
+- net25
+  ( inst21 D ) ( inst20 Q )
+ ;
+- net26
+  ( inst22 D ) ( inst21 Q )
+ ;
+- net27
+  ( inst23 D ) ( inst22 Q )
+ ;
+- net28
+  ( inst24 D ) ( inst23 Q )
+ ;
+- net29
+  ( inst25 D ) ( inst24 Q )
+ ;
+- net30
+  ( inst26 D ) ( inst25 Q )
+ ;
+- net31
+  ( inst27 D ) ( inst26 Q )
+ ;
+- net32
+  ( inst28 D ) ( inst27 Q )
+ ;
+- net33
+  ( inst29 D ) ( inst28 Q )
+ ;
+- net34
+  ( inst30 D ) ( inst29 Q )
+ ;
+- net35
+  ( inst31 D ) ( inst30 Q )
+ ;
+- net36
+  ( inst32 D ) ( inst31 Q )
+ ;
+- net37
+  ( inst33 D ) ( inst32 Q )
+ ;
+END NETS
+
+END DESIGN
