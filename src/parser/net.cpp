@@ -1,5 +1,5 @@
 #include "net.h"
-#include "../Util/config.h"
+#include "../util/config.h"
 #include <limits.h>
 #include <assert.h>
 
