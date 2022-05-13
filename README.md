@@ -15,7 +15,8 @@ $ make
 
 ## 2. how to run
 ```
-./run.sh
+$ chmod u+x ./run.sh
+$ ./run.sh
 ```
 Then a result.def will be generated in result folder, which can be visualized using EDA tools.
 
