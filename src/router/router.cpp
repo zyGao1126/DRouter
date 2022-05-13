@@ -245,30 +245,22 @@ bool Router::checkLegality(GridLayerBox *gridLayer, const int netId)
         x = finalPath[netId - 1][i][0];
         y = finalPath[netId - 1][i][1];
 
-        if (x == 0 && y == 0) {
+        if (x == 0 && y == 0)
             isLegal = !(grid[x][y] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
-        }
-        else if (x == 0 && y == h - 1) {
+        else if (x == 0 && y == h - 1)
             isLegal = !(grid[x][y] > 0 || grid[x][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y - 1] > 0);
-        }
-        else if (y == 0 && x == w - 1) {
+        else if (y == 0 && x == w - 1)
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0);
-        }
-        else if (y == h - 1 && x == w - 1) {
+        else if (y == h - 1 && x == w - 1)
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0);
-        }
-        else if (x == 0 && y > 0 && y < h - 1) {
+        else if (x == 0 && y > 0 && y < h - 1) 
             isLegal = !(grid[x][y] > 0 || grid[x][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
-        }
-        else if (y == 0 && x > 0 && x < w - 1) {
+        else if (y == 0 && x > 0 && x < w - 1)
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);    
-        }
-        else if (y == h - 1 && x > 0 && x < w - 1) {
+        else if (y == h - 1 && x > 0 && x < w - 1) 
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y - 1] > 0);
-        }
-        else if (x == w - 1 && y > 0 && y < h - 1) {
+        else if (x == w - 1 && y > 0 && y < h - 1) 
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0);
-        }
         // normal case
         else {
             isLegal = !(grid[x][y] > 0 || grid[x - 1][y - 1] > 0 || grid[x - 1][y] > 0 || grid[x - 1][y + 1] > 0 || 
