@@ -3,6 +3,7 @@
 
 #include "../parser/layer.h"
 #include "../parser/instance.h"
+#include "../mempool/mempool.h"
 #include "../parser/net.h"
 
 #define MICRONS 2000
@@ -21,6 +22,11 @@ extern std::string defFileName;
 extern std::string lefFileName;
 extern std::string resultFileName;
 
+extern MemoryPool<MetalLayer> metalMemPool;
+extern MemoryPool<ViaLayer> viaMemPool;
+extern MemoryPool<Cell> cellMemPool;
+extern MemoryPool<Inst> instMemPool;
+extern MemoryPool<Net> netMemPool;
 
 extern std::vector<MetalLayer *> metalList;
 extern std::vector<ViaLayer *> viaList;

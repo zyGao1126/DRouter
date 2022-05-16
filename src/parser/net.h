@@ -11,6 +11,7 @@ public:
     std::vector<std::vector<int>> m_nodeList;
 
 public:
+    Net(): m_netId(0), m_nodeList(std::vector<std::vector<int>> ()) {}
     Net(int id): m_netId(id), m_nodeList(std::vector<std::vector<int>> ()) {}
     void getConnectedNode(const int instId, const std::string& pinName);
     void convertToGrid(std::vector<std::vector<int>> &portVec, int layerId);

@@ -4,6 +4,7 @@
 #include "layer.h"
 #include "instance.h"
 #include "net.h"
+#include "../mempool/mempool.hpp"
 #include <getopt.h>
 
 using std::string;
@@ -35,7 +36,7 @@ void Parser::split(const string& s, vector<string>& v, const string& c)
 
 void Parser::parseMetalInfo(ifstream &lefFile, string &line, vector<string> &strList) 
 {
-    MetalLayer *metalLayer = new MetalLayer();
+    MetalLayer *metalLayer = metalMemPool.Alloc();
     metalLayer->m_id = stoi(strList[1].substr(5, strList[1].length() - 5));
 
     for (int i = 0; i < lefMetalLine; i++) {
@@ -66,7 +67,7 @@ void Parser::parseMetalInfo(ifstream &lefFile, string &line, vector<string> &str
 
 void Parser::parseViaInfo(ifstream &lefFile, string &line, vector<string> &strList) 
 {
-    ViaLayer *viaLayer = new ViaLayer();
+    ViaLayer *viaLayer = viaMemPool.Alloc();
     viaLayer->m_viaId = stoi(strList[1].substr(3, 1));
 
     for (int i = 0; i < lefViaLine; i++) {
@@ -91,7 +92,7 @@ void Parser::parseCellInfo(ifstream &lefFile, string &line)
 {
     vector<string> strList;
     this->split(line, strList, " ");
-    Cell *cell = new Cell();
+    Cell *cell = cellMemPool.Alloc();
     cell->m_cellName = strList[1];
 
     while (!lefFile.eof()) {
@@ -146,7 +147,8 @@ void Parser::parseInstInfo(std::ifstream &defFile)
     split(instLine, strList, " ");
     int num = stoi(strList[1].substr(4));
 
-    Inst *inst = new Inst(num);
+    Inst *inst = instMemPool.Alloc();
+    inst->m_id = num;
     string cellName = strList[2];
     int instCoors[2] = {stoi(strList[6]), stoi(strList[7])};
     string direct = strList[9];
@@ -168,7 +170,8 @@ void Parser::parseNetInfo(ifstream &defFile)
     getline(defFile, netLine, ';');
     this->split(netLine, strList, " ");
     int netNum = stoi(strList[1].substr(3, strList[1].length() - 3));
-    Net *net = new Net(netNum);
+    Net *net = netMemPool.Alloc();
+    net->m_netId = netNum;
 
     for (size_t j = 0; j < strList.size(); j++) {
         if (strList[j] == "(") {
@@ -189,6 +192,12 @@ void Parser::parseLefFile(ifstream &lefFile)
 {
     string line;
     vector<string> strList;
+    // initialize 10 metal layer
+    metalMemPool.Create(10);
+    // initialize 10 via layer
+    viaMemPool.Create(10);
+    // initialize 10 via layer
+    cellMemPool.Create(5);    
 
     while (!lefFile.eof()) {
         getline(lefFile, line);
@@ -234,6 +243,8 @@ void Parser::parseDefFile(ifstream &defFile)
     }
     int endLine = line.find(';'); 
     int compNum = stoi(line.substr(11, endLine - 11));
+    // initialize instance mempool
+    instMemPool.Create(compNum);
     for (int i = 0; i < compNum; i++) {
         parseInstInfo(defFile);
     }
@@ -245,6 +256,8 @@ void Parser::parseDefFile(ifstream &defFile)
     endLine = line.find(';');
     // initial global net count
     netCount = stoi(line.substr(5, endLine - 5));
+    // initialize net mempool
+    netMemPool.Create(netCount);    
     // initial global layer list
     layerList = new int[netCount] ();   
     // initial global final path
