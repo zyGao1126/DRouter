@@ -1,14 +1,14 @@
 #include "mempool.h"
 
 template <typename T>
-bool MemoryPool<T>::Create(int num) 
+bool memoryPool<T>::create(int num) 
 {
     blockNum = num;
     blockSetNum = 1;
 
-    blockSetList = new MemBlockSet;
+    blockSetList = new memBlockSet;
     blockSetList->pNext = nullptr;
-    blockSetList->curBlock = new MemBlock [blockNum];
+    blockSetList->curBlock = new memBlock [blockNum];
     
     for (int i = 0; i < blockNum; i++) {
         if (i > 0) {
@@ -25,14 +25,14 @@ bool MemoryPool<T>::Create(int num)
 }
 
 template <typename T>
-void MemoryPool<T>::Destroy() 
+void memoryPool<T>::destroy() 
 {
     while (blockSetList != nullptr) {
         if (blockSetList->curBlock) {
             delete [] blockSetList->curBlock;
             blockSetList->curBlock = nullptr;
         }
-        MemBlockSet *tmp = blockSetList;
+        memBlockSet *tmp = blockSetList;
         blockSetList = blockSetList->pNext;
         delete tmp;
     }
@@ -41,13 +41,13 @@ void MemoryPool<T>::Destroy()
 }
 
 template <typename T>
-T* MemoryPool<T>::Alloc() 
+T* memoryPool<T>::alloc() 
 {
     //cur blockset has used up
     if (freeBlockList == nullptr) {
-        MemBlockSet *pSet = new MemBlockSet;
+        memBlockSet *pSet = new memBlockSet;
         pSet->pNext = blockSetList;
-        pSet->curBlock = new MemBlock [blockNum];
+        pSet->curBlock = new memBlock [blockNum];
         for (int i = 0; i < blockNum; i++) {
             if (i > 0) {
                 pSet->curBlock[i].pBefore = &(pSet->curBlock[i-1]);
@@ -61,31 +61,31 @@ T* MemoryPool<T>::Alloc()
         blockSetNum++;
     }
 
-    MemBlock *pMemBlock = freeBlockList;
+    memBlock *pmemBlock = freeBlockList;
     freeBlockList = freeBlockList->pNext;
     if (freeBlockList)
         freeBlockList->pBefore = nullptr;
-    return &(pMemBlock->Element);
+    return &(pmemBlock->Element);
 }
 
 template <typename T>
-void MemoryPool<T>::Free(T *element) 
+void memoryPool<T>::freeMem(T *element) 
 {
-    MemBlock *pMemBlock = (MemBlock *)element;
-    pMemBlock->pBefore = nullptr;
-    pMemBlock->pNext = freeBlockList;
+    memBlock *pmemBlock = (memBlock *)element;
+    pmemBlock->pBefore = nullptr;
+    pmemBlock->pNext = freeBlockList;
     if (freeBlockList)    
-        freeBlockList->pBefore = pMemBlock;
-    freeBlockList = pMemBlock;
+        freeBlockList->pBefore = pmemBlock;
+    freeBlockList = pmemBlock;
     usedNum--;
 }
 
 template <typename T>
-int MemoryPool<T>::GetPoolSize() {
+int memoryPool<T>::getPoolSize() {
     return blockSetNum * blockNum;
 }
 
 template <typename T>
-bool MemoryPool<T>::IsCreated() {
+bool memoryPool<T>::isCreated() {
     return blockSetList != nullptr;
 }

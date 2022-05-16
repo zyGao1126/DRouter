@@ -22,11 +22,11 @@ extern std::string defFileName;
 extern std::string lefFileName;
 extern std::string resultFileName;
 
-extern MemoryPool<MetalLayer> metalMemPool;
-extern MemoryPool<ViaLayer> viaMemPool;
-extern MemoryPool<Cell> cellMemPool;
-extern MemoryPool<Inst> instMemPool;
-extern MemoryPool<Net> netMemPool;
+extern memoryPool<MetalLayer> metalMemPool;
+extern memoryPool<ViaLayer> viaMemPool;
+extern memoryPool<Cell> cellMemPool;
+extern memoryPool<Inst> instMemPool;
+extern memoryPool<Net> netMemPool;
 
 extern std::vector<MetalLayer *> metalList;
 extern std::vector<ViaLayer *> viaList;

@@ -15,11 +15,11 @@ string defFileName;
 string lefFileName;
 string resultFileName;
 
-MemoryPool<MetalLayer> metalMemPool;
-MemoryPool<ViaLayer> viaMemPool;
-MemoryPool<Cell> cellMemPool;
-MemoryPool<Inst> instMemPool;
-MemoryPool<Net> netMemPool;
+memoryPool<MetalLayer> metalMemPool;
+memoryPool<ViaLayer> viaMemPool;
+memoryPool<Cell> cellMemPool;
+memoryPool<Inst> instMemPool;
+memoryPool<Net> netMemPool;
 
 
 vector<MetalLayer *> metalList;
@@ -33,11 +33,11 @@ int *layerList;
 void deallocate() 
 {
     // free correspond mempool
-    metalMemPool.Destroy();
-    viaMemPool.Destroy();
-    cellMemPool.Destroy();
-    instMemPool.Destroy();
-    netMemPool.Destroy();
+    metalMemPool.destroy();
+    viaMemPool.destroy();
+    cellMemPool.destroy();
+    instMemPool.destroy();
+    netMemPool.destroy();
     // free route path
     delete [] finalPath;  
     // free layer id

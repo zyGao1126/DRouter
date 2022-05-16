@@ -2,45 +2,45 @@
 #define MEMPOOL
 
 template <typename T>
-class MemoryPool 
+class memoryPool 
 {
 private:
     //memory sub block
-    struct MemBlock 
+    struct memBlock 
     {
         T Element;
-        MemBlock *pNext;
-        MemBlock *pBefore;
+        memBlock *pNext;
+        memBlock *pBefore;
     };
     //memory block
-    struct MemBlockSet 
+    struct memBlockSet 
     {
-        MemBlock *curBlock; 
-        MemBlockSet *pNext;
+        memBlock *curBlock; 
+        memBlockSet *pNext;
     };
 
 private:
     // connect memory block set  
-    MemBlockSet *blockSetList;
+    memBlockSet *blockSetList;
     // point to current free block
-    MemBlock *freeBlockList;
+    memBlock *freeBlockList;
     int blockNum; 
     int blockSetNum; 
     int usedNum;
     
 public:
-    MemoryPool(): blockSetList(nullptr), freeBlockList(nullptr), blockNum(0), blockSetNum(0), usedNum(0) {}
-    ~MemoryPool() 
+    memoryPool(): blockSetList(nullptr), freeBlockList(nullptr), blockNum(0), blockSetNum(0), usedNum(0) {}
+    ~memoryPool() 
     {
-        if (GetPoolSize() > 0 || IsCreated())
-            Destroy();
+        if (getPoolSize() > 0 || isCreated())
+            destroy();
     }
-    bool Create(int num);
-    void Destroy();
-    T* Alloc();
-    void Free(T *element);
-    int GetPoolSize();
-    bool IsCreated();
+    bool create(int num);
+    void destroy();
+    T* alloc();
+    void freeMem(T *element);
+    int getPoolSize();
+    bool isCreated();
 };
 
 #endif
