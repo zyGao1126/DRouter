@@ -10,9 +10,9 @@ GENER_DIR = generator
 
 INC_PATH = -I$(SRC_DIR)
 
-LIB_PATH = -L
+LIB_PATH = -L.
 
-LIBS = -lgflags
+# LIBS = -lpthread
 
 SRCS = $(SRC_DIR)/main.cpp \
 	   $(SRC_DIR)/$(PARSER_DIR)/parser.cpp \
