@@ -23,6 +23,6 @@ Then a result.def will be generated in result folder, which can be visualized us
 ## 3. demo
 we test the routing result in Innovus, which gives:
 
-<img src="https://github.com/zyGao1126/DRouter/blob/master/solution1.png.PNG" width="400" height="400" />
+<img src="https://github.com/zyGao1126/DRouter/blob/master/solution1.PNG" width="400" height="400" />
 
-<img src="https://github.com/zyGao1126/DRouter/blob/master/solution2.png.PNG" width="400" height="400" />
+<img src="https://github.com/zyGao1126/DRouter/blob/master/solution2.PNG" width="400" height="400" />
