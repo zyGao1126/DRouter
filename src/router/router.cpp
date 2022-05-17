@@ -5,51 +5,21 @@
 using std::vector;
 using std::list;
 
-bool Router::disCmp(const Net *a, const Net *b) 
+AStar::~AStar() 
 {
-    int dis1 = 0;
-    int dis2 = 0;  
- 
-    for (size_t i = 1; i < a->m_nodeList.size(); i++) 
-        dis1 += (abs(a->m_nodeList[i][0] - a->m_nodeList[i - 1][0]) + abs(a->m_nodeList[i][1] - a->m_nodeList[i - 1][1]));
-    for (size_t i = 1; i < b->m_nodeList.size(); i++)
-        dis2 += (abs(b->m_nodeList[i][0] - b->m_nodeList[i - 1][0]) + abs(b->m_nodeList[i][1] - b->m_nodeList[i - 1][1]));
-    
-    return (dis1 < dis2); 
-}
-
-void Router::updateGridBox(int idx, int x, int y, GridLayerBox *gridLayer) 
-{
-    int **grid = gridLayer->gridBox;
-    int w = gridLayer->m_gridWidth;
-    int h = gridLayer->m_gridHeight;
-    grid[x][y] = -idx;
-
-    //for different adjacent grid box, do different process
-    if (x > 0)                  signGrid1(grid, idx, x-1, y);
-    if (x < w-1)                signGrid1(grid, idx, x+1, y);
-    if (x > 0 && y > 1)         signGrid1(grid, idx, x-1, y-2);
-    if (x > 0 && y < h-2)       signGrid1(grid, idx, x-1, y+2);  
-    if (x > 0 && y < h-3)       signGrid1(grid, idx, x-1, y+3);  
-    if (x < w-1 && y > 1)       signGrid1(grid, idx, x+1, y-2);
-    if (x < w-1 && y < h-2)     signGrid1(grid, idx, x+1, y+2);    
-    if (x < w-1 && y < h-3)     signGrid1(grid, idx, x+1, y+3);
-    if (y > 0)                  signGrid1(grid, idx, x, y-1);
-    if (y < h-1)                signGrid1(grid, idx, x, y+1);   
-    if (y > 1)                  signGrid1(grid, idx, x, y-2);       
-    if (y < h-2)                signGrid1(grid, idx, x, y+2);         
-    if (y < h-3)                signGrid1(grid, idx, x, y+3);    
-    if (x > 1)                  signGrid1(grid, idx, x-2, y);      
-    if (x < w-2)                signGrid1(grid, idx, x+2, y);       
-    if (x > 1 && y > 0)         signGrid1(grid, idx, x-2, y-1);
-    if (x < w-2 && y > 0)       signGrid1(grid, idx, x+2, y-1);
-    if (x > 1 && y < h-1)       signGrid1(grid, idx, x-2, y+1);
-    if (x < w-2 && y < h-1)     signGrid1(grid, idx, x+2, y+1);         
-
-    if (x > 0 && y > 0)         signGrid2(grid, idx, x-1, y-1);
-    if (x > 0 && y < h-1)       signGrid2(grid, idx, x-1, y+1);
-    if (x < w-1 && y > 0)       signGrid2(grid, idx, x+1, y-1);
-    if (x < w-1 && y < h-1)     signGrid2(grid, idx, x+1, y+1);                   
+    list<Point *>::iterator ite;
+    for (ite = m_openList.begin(); ite != m_openList.end(); ++ite) {
+        Point *tmp = *ite;
+        delete tmp;
+        tmp = nullptr;
+    }
+    for (ite = m_closeList.begin(); ite != m_closeList.end(); ++ite) {
+        Point *tmp = *ite;
+        delete tmp;
+        tmp = nullptr;
+    }
+    m_openList.clear();
+    m_closeList.clear();
 }
 
 Point* AStar::getLeastFpoint() {
@@ -164,22 +134,53 @@ Point* AStar::GetPath(Point &startP, Point &endP, GridLayerBox *gridLayer, const
     return nullptr;
 }
 
-AStar::~AStar() 
+bool Router::disCmp(const Net *a, const Net *b) 
 {
-    list<Point *>::iterator ite;
-    for (ite = m_openList.begin(); ite != m_openList.end(); ++ite) {
-        Point *tmp = *ite;
-        delete tmp;
-        tmp = nullptr;
-    }
-    for (ite = m_closeList.begin(); ite != m_closeList.end(); ++ite) {
-        Point *tmp = *ite;
-        delete tmp;
-        tmp = nullptr;
-    }
-    m_openList.clear();
-    m_closeList.clear();
+    int dis1 = 0;
+    int dis2 = 0;  
+ 
+    for (size_t i = 1; i < a->m_nodeList.size(); i++) 
+        dis1 += (abs(a->m_nodeList[i][0] - a->m_nodeList[i - 1][0]) + abs(a->m_nodeList[i][1] - a->m_nodeList[i - 1][1]));
+    for (size_t i = 1; i < b->m_nodeList.size(); i++)
+        dis2 += (abs(b->m_nodeList[i][0] - b->m_nodeList[i - 1][0]) + abs(b->m_nodeList[i][1] - b->m_nodeList[i - 1][1]));
+    
+    return (dis1 < dis2); 
 }
+
+void Router::updateGridBox(int idx, int x, int y, GridLayerBox *gridLayer) 
+{
+    int **grid = gridLayer->gridBox;
+    int w = gridLayer->m_gridWidth;
+    int h = gridLayer->m_gridHeight;
+    grid[x][y] = -idx;
+
+    //for different adjacent grid box, do different process
+    if (x > 0)                  signGrid1(grid, idx, x-1, y);
+    if (x < w-1)                signGrid1(grid, idx, x+1, y);
+    if (x > 0 && y > 1)         signGrid1(grid, idx, x-1, y-2);
+    if (x > 0 && y < h-2)       signGrid1(grid, idx, x-1, y+2);  
+    if (x > 0 && y < h-3)       signGrid1(grid, idx, x-1, y+3);  
+    if (x < w-1 && y > 1)       signGrid1(grid, idx, x+1, y-2);
+    if (x < w-1 && y < h-2)     signGrid1(grid, idx, x+1, y+2);    
+    if (x < w-1 && y < h-3)     signGrid1(grid, idx, x+1, y+3);
+    if (y > 0)                  signGrid1(grid, idx, x, y-1);
+    if (y < h-1)                signGrid1(grid, idx, x, y+1);   
+    if (y > 1)                  signGrid1(grid, idx, x, y-2);       
+    if (y < h-2)                signGrid1(grid, idx, x, y+2);         
+    if (y < h-3)                signGrid1(grid, idx, x, y+3);    
+    if (x > 1)                  signGrid1(grid, idx, x-2, y);      
+    if (x < w-2)                signGrid1(grid, idx, x+2, y);       
+    if (x > 1 && y > 0)         signGrid1(grid, idx, x-2, y-1);
+    if (x < w-2 && y > 0)       signGrid1(grid, idx, x+2, y-1);
+    if (x > 1 && y < h-1)       signGrid1(grid, idx, x-2, y+1);
+    if (x < w-2 && y < h-1)     signGrid1(grid, idx, x+2, y+1);         
+
+    if (x > 0 && y > 0)         signGrid2(grid, idx, x-1, y-1);
+    if (x > 0 && y < h-1)       signGrid2(grid, idx, x-1, y+1);
+    if (x < w-1 && y > 0)       signGrid2(grid, idx, x+1, y-1);
+    if (x < w-1 && y < h-1)     signGrid2(grid, idx, x+1, y+1);                   
+}
+
 
 bool Router::singleNetRoute(int startX, int startY, int endX, int endY, GridLayerBox *gridLayer, vector<vector<int>> &path, const int netId) 
 {
@@ -196,7 +197,6 @@ bool Router::singleNetRoute(int startX, int startY, int endX, int endY, GridLaye
     return true;
 }
 
-// hanshuming verb
 bool Router::astarRoute(GridLayerBox *gridLayer, const std::vector<std::vector<int>> &nodeList, 
                         vector<vector<int>> &path, const int netId) 
 {
@@ -245,27 +245,16 @@ bool Router::checkLegality(GridLayerBox *gridLayer, const int netId)
         x = finalPath[netId - 1][i][0];
         y = finalPath[netId - 1][i][1];
 
-        if (x == 0 && y == 0)
-            isLegal = !(grid[x][y] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
-        else if (x == 0 && y == h - 1)
-            isLegal = !(grid[x][y] > 0 || grid[x][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y - 1] > 0);
-        else if (y == 0 && x == w - 1)
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0);
-        else if (y == h - 1 && x == w - 1)
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0);
-        else if (x == 0 && y > 0 && y < h - 1) 
-            isLegal = !(grid[x][y] > 0 || grid[x][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
-        else if (y == 0 && x > 0 && x < w - 1)
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);    
-        else if (y == h - 1 && x > 0 && x < w - 1) 
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y - 1] > 0);
-        else if (x == w - 1 && y > 0 && y < h - 1) 
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y - 1] > 0 || grid[x - 1][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0);
+        if (x == 0 && y == 0)                           isLegal = !checkGrid1(grid, x, y);
+        else if (x == 0 && y == h - 1)                  isLegal = !checkGrid1(grid, x, y - 1);
+        else if (y == 0 && x == w - 1)                  isLegal = !checkGrid1(grid, x - 1, y);
+        else if (y == h - 1 && x == w - 1)              isLegal = !checkGrid1(grid, x - 1, y - 1);
+        else if (x == 0 && y > 0 && y < h - 1)          isLegal = !checkGrid2(grid, x, y);
+        else if (y == 0 && x > 0 && x < w - 1)          isLegal = !checkGrid3(grid, x, y);
+        else if (y == h - 1 && x > 0 && x < w - 1)      isLegal = !checkGrid3(grid, x, y - 1);
+        else if (x == w - 1 && y > 0 && y < h - 1)      isLegal = !checkGrid2(grid, x - 1, y);
         // normal case
-        else {
-            isLegal = !(grid[x][y] > 0 || grid[x - 1][y - 1] > 0 || grid[x - 1][y] > 0 || grid[x - 1][y + 1] > 0 || 
-                      grid[x][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
-        }
+        else                                            isLegal = !checkGrid4(grid, x, y);
         
         if (isLegal == false)
             return false;
@@ -280,23 +269,66 @@ void Router::routeOnGridBox(int idx, int x, int y, GridLayerBox *gridLayer)
     int h = gridLayer->m_gridHeight;
 
     grid[x][y] = idx;
-    if (x > 0)
-        grid[x - 1][y] = ((grid[x - 1][y] == 0 || grid[x - 1][y] == SPACEFLAG)) ? -idx : grid[x - 1][y];
-    if (y > 0)
-        grid[x][y - 1] = ((grid[x][y - 1] == 0 || grid[x][y - 1] == SPACEFLAG)) ? -idx : grid[x][y - 1];
-    if (x < w-1)
-        grid[x + 1][y] = ((grid[x + 1][y] == 0 || grid[x + 1][y] == SPACEFLAG)) ? -idx : grid[x + 1][y];
-    if (y < h-1)
-        grid[x][y + 1] = ((grid[x][y + 1] == 0 || grid[x][y + 1] == SPACEFLAG)) ? -idx : grid[x + 1][y];
-    if (x > 0 && y > 0)
-        grid[x - 1][y - 1] = ((grid[x - 1][y - 1] == 0 || grid[x - 1][y - 1] == SPACEFLAG)) ? -idx : grid[x - 1][y - 1];
-    if (x < w - 1 && y > 0)
-        grid[x + 1][y - 1] = ((grid[x + 1][y - 1] == 0 || grid[x + 1][y - 1] == SPACEFLAG)) ? -idx : grid[x + 1][y - 1];
-    if (w > 0 && y < h - 1)
-        grid[x - 1][y + 1] = ((grid[x - 1][y + 1] == 0 || grid[x - 1][y + 1] == SPACEFLAG)) ? -idx : grid[x - 1][y + 1];
-    if (x < w-1 && y < h-1)
-        grid[x + 1][y + 1] = ((grid[x + 1][y + 1] == 0 || grid[x + 1][y + 1] == SPACEFLAG)) ? -idx : grid[x + 1][y + 1];
+    if (x > 0)                                          signGrid1(grid, idx, x - 1, y);
+    if (y > 0)                                          signGrid1(grid, idx, x, y - 1);
+    if (x < w-1)                                        signGrid1(grid, idx, x + 1, y);
+    if (y < h-1)                                        signGrid1(grid, idx, x, y + 1);
+    if (x > 0 && y > 0)                                 signGrid1(grid, idx, x - 1, y - 1);
+    if (x < w - 1 && y > 0)                             signGrid1(grid, idx, x + 1, y - 1);
+    if (w > 0 && y < h - 1)                             signGrid1(grid, idx, x - 1, y + 1);
+    if (x < w-1 && y < h-1)                             signGrid1(grid, idx, x + 1, y + 1);
+}
 
+/*
+// multithread find path
+void Router::multiFindPath(GridLayerBox *gridLayer, struct netState* netste, const vector<int> &netToRoute, const vector<vector<vector<int>>> &nodeList)
+{
+    vector<vector<int>>* arr = new vector<vector<int>> [threadNum];
+    bool *res = new bool [threadNum] (); 
+    std::thread t[threadNum];
+    
+    for (size_t i = 0; i < netToRoute.size(); i += threadNum)
+        for (size_t j = 0; j < threadNum; j++) {
+            int netId = netToRoute[i + j];
+            if ((i + j) < netToRoute.size()) {
+                log() << "Begin Route Net " << netId << '\t';
+                if (nodeList[i + j].empty()) {
+                    log() << '\t' << "net with pin, pass" << std::endl;        
+                    continue;
+                }
+                t[j] = std::thread([&] { res[j] = astarRoute( gridLayer, std::ref(nodeList[i + j]), std::ref(arr[j]), netId); });
+                
+                if (res[j] == true) {
+                    log() << '\t' << " finish routing " << std::endl;
+                    netste->netRouted.push_back(netId);
+                    finalPath[netId - 1].assign(arr[j].begin(), arr[j].end());
+                }
+                else 
+                    netste->netUnroute.push_back(netId);
+                t[j].join();
+            }
+        }
+}
+*/
+
+void Router::findPath(GridLayerBox *gridLayer, struct netState* netste, const vector<int> &netToRoute, const vector<vector<vector<int>>> &nodeList) 
+{
+    for (size_t i = 0; i < netToRoute.size(); i++) {
+        int netId = netToRoute[i];
+        log() << "Begin Route Net " << netId << '\t';
+        if (nodeList[i].empty()) {
+            log() << '\t' << "net with pin, pass" << std::endl;
+            continue;
+        }
+        vector<vector<int>> tmpPath; //save the routed path
+        if (astarRoute(gridLayer, nodeList[i], tmpPath, netId)) {
+            log() << '\t' << " finish routing " << std::endl;
+            netste->netRouted.push_back(netId);
+            finalPath[netId - 1].assign(tmpPath.begin(), tmpPath.end());
+        }
+        else 
+            netste->netUnroute.push_back(netId);
+    }
 }
 
 void Router::routeNets(GridLayerBox *gridLayer, vector<int>& netToRoute) 
@@ -304,12 +336,10 @@ void Router::routeNets(GridLayerBox *gridLayer, vector<int>& netToRoute)
     int loopCount = 0;
     int netId;
     int x, y;
-    vector<vector<int>> tmpPath; //save the routed path
-    vector<int> netRouted; //store the id of wired net
-    vector<int> netUnroute; //store th id of unwired net due to resource limitation
+    struct netState netSte; //save net routing state
 
     while (loopCount < RRRLIMIT) {
-        netRouted.clear();
+        netSte.netRouted.clear();
         if (netToRoute.empty())
             break;   
         vector<vector<vector<int>>> portVec(netToRoute.size()); //store convert-to-grid net list
@@ -342,26 +372,12 @@ void Router::routeNets(GridLayerBox *gridLayer, vector<int>& netToRoute)
             }
 
         // start net routing
-        for (size_t i = 0; i < netToRoute.size(); i++) {
-            netId = netToRoute[i];
-            log() << "Begin Route Net " << netId << '\t';
-            if (portVec[i].empty()) {
-                log() << '\t' << "net with pin, pass" << std::endl;
-                continue;
-            }   
-            tmpPath.clear();
-            if (astarRoute(gridLayer, portVec[i], tmpPath, netId)) {
-                log() << '\t' << " finish routing " << std::endl;
-                netRouted.push_back(netId);
-                finalPath[netId - 1].assign(tmpPath.begin(), tmpPath.end());
-            }
-            else 
-                netUnroute.push_back(netId);
-        }
+        findPath(gridLayer, &netSte, netToRoute, portVec);
+
         netToRoute.clear();
         // check rip-up
-        for (size_t j = 0; j < netRouted.size(); j++) {
-            netId = netRouted[j];
+        for (size_t j = 0; j < netSte.netRouted.size(); j++) {
+            netId = netSte.netRouted[j];
             if (checkLegality(gridLayer, netId)) {
                 for (size_t k = 0; k < finalPath[netId - 1].size(); k++) {
                     x = finalPath[netId-1][k][0];
@@ -380,7 +396,7 @@ void Router::routeNets(GridLayerBox *gridLayer, vector<int>& netToRoute)
         loopCount++;
     }
     // add unrouted nets to betToRoute vector
-    for (auto v : netUnroute)
+    for (auto v : netSte.netUnroute)
         netToRoute.push_back(v);   
 }
 

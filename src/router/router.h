@@ -8,6 +8,12 @@
 #include <list>
 #include <cmath>
 
+struct netState 
+{
+    std::vector<int> netRouted; //store the id of wired net
+    std::vector<int> netUnroute; //store th id of unwired net due to resource limitation     
+};
+
 struct Point 
 {
 public:
@@ -56,6 +62,10 @@ public:
 
 private:
     void routeNets(GridLayerBox *gridLayer, std::vector<int>& netToRoute);
+    void findPath(GridLayerBox *gridLayer, struct netState* netste, const std::vector<int> &netToRoute, 
+                  const std::vector<std::vector<std::vector<int>>> &nodeList);
+    // void multiFindPath(GridLayerBox *gridLayer, struct netState* netste, const std::vector<int> &netToRoute, 
+    //                    const std::vector<std::vector<std::vector<int>>> &nodeList);    
     bool astarRoute(GridLayerBox *gridLayer, const std::vector<std::vector<int>> &nodeList, std::vector<std::vector<int>> &path, const int netId);
     bool singleNetRoute(int startX, int startY, int endX, int endY, GridLayerBox *gridLayer, 
                         std::vector<std::vector<int>> &pathList, const int netId);    
@@ -74,6 +84,19 @@ private:
     inline void signGrid2(int **grid, int idx, int x, int y) {
         grid[x][y] = (grid[x][y] <= 0) ? SPACEFLAG : grid[x][y];
     }
+    inline bool checkGrid1(int **grid, int x, int y) {
+        return (grid[x][y] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
+    }
+    inline bool checkGrid2(int **grid, int x, int y) {
+        return (grid[x][y] > 0 || grid[x][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
+    }    
+    inline bool checkGrid3(int **grid, int x, int y) {
+        return (grid[x][y] > 0 || grid[x - 1][y] > 0 || grid[x][y + 1] > 0 || grid[x - 1][y + 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
+    }    
+    inline bool checkGrid4(int **grid, int x, int y) {
+        return (grid[x][y] > 0 || grid[x - 1][y - 1] > 0 || grid[x - 1][y] > 0 || grid[x - 1][y + 1] > 0 || 
+                grid[x][y - 1] > 0 || grid[x][y + 1] > 0 || grid[x + 1][y - 1] > 0 || grid[x + 1][y] > 0 || grid[x + 1][y + 1] > 0);
+    }     
 };
 
 
